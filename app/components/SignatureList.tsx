@@ -1,5 +1,6 @@
 import { useSignatures } from "../hook/useSignatures";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   walletAddress?: string;
@@ -7,6 +8,7 @@ type Props = {
 
 export const SignatureList = ({ walletAddress }: Props) => {
   const { isLoading, signatures } = useSignatures(walletAddress);
+  const navigation = useNavigation<any>();
 
   if (isLoading) {
     return (
@@ -22,9 +24,16 @@ export const SignatureList = ({ walletAddress }: Props) => {
         data={signatures}
         keyExtractor={(item) => item.signature}
         renderItem={({ item }) => (
-          <View style={{ paddingVertical: 8 }}>
-            <Text>{item.signature.slice(0, 25)}</Text>
-          </View>
+          <TouchableOpacity
+            style={{ paddingVertical: 8 }}
+            onPress={() => {
+              navigation.navigate("Details", { signature: item.signature });
+            }}
+          >
+            <View style={{ paddingVertical: 8 }}>
+              <Text>{item.signature.slice(0, 25)}</Text>
+            </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={() => (
           <Text>No signatures found, try searching for a wallet address.</Text>

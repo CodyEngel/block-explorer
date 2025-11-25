@@ -1,10 +1,12 @@
 import { useSignatures } from "../hook/useSignatures";
 import { View, Text, FlatList } from "react-native";
 
-export const SignatureList = () => {
-  const { isLoading, signatures } = useSignatures(
-    "3vxheE5C46XzK4XftziRhwAf8QAfipD7HXXWj25mgkom",
-  );
+type Props = {
+  walletAddress?: string;
+};
+
+export const SignatureList = ({ walletAddress }: Props) => {
+  const { isLoading, signatures } = useSignatures(walletAddress);
 
   if (isLoading) {
     return (
@@ -16,7 +18,6 @@ export const SignatureList = () => {
 
   return (
     <View style={{ padding: 16, width: "90%", height: "90%" }}>
-      <Text>{`Signatures: ${signatures?.length}`}</Text>
       <FlatList
         data={signatures}
         keyExtractor={(item) => item.signature}
@@ -25,8 +26,11 @@ export const SignatureList = () => {
             <Text>{item.signature.slice(0, 25)}</Text>
           </View>
         )}
-        ListEmptyComponent={() => <Text>No signatures found</Text>}
+        ListEmptyComponent={() => (
+          <Text>No signatures found, try searching for a wallet address.</Text>
+        )}
       />
+      {signatures ? <Text>{`Signatures: ${signatures?.length}`}</Text> : null}
     </View>
   );
 };

@@ -10,7 +10,7 @@ type Signature = {
   err?: any;
 };
 
-export const useSignatures = (walletAddress: string) => {
+export const useSignatures = (walletAddress?: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["signatures", walletAddress],
     queryFn: async () => {
@@ -19,6 +19,7 @@ export const useSignatures = (walletAddress: string) => {
         { limit: 100 },
       ]);
     },
+    enabled: !!walletAddress,
   });
 
   return {
